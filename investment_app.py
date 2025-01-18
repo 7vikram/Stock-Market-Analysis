@@ -5,6 +5,7 @@ import yfinance as yf
 import plotly.graph_objects as go
 from scipy.optimize import newton
 from pandas.tseries.offsets import BMonthBegin
+import os
 
 # Helper functions
 def calculate_cagr(start_value, end_value, years):
@@ -26,12 +27,25 @@ def find_nearest_date(dates, target_date):
     nearest_date = min(dates, key=lambda x: abs(x - target_date))
     return nearest_date
 
+# Function to load ETF tickers from file
+def load_etf_tickers():
+    etf_file = "etf_tickers.txt"  # Adjust the file name and path as needed
+    if os.path.exists(etf_file):
+        with open(etf_file, "r") as file:
+            tickers = file.read().split(",")
+        return tickers
+    else:
+        return ["^NSEI"]  # Default to "^NSEI" if the file does not exist
+
 # Streamlit UI
 st.title('Investment Strategy Analysis')
 st.sidebar.header('Parameters')
 
+# Load ETF tickers from the file or use default
+etf_tickers = load_etf_tickers()
+
 # User Inputs
-etf_ticker = st.sidebar.text_input('ETF Ticker', "^NSEI")
+etf_ticker = st.sidebar.selectbox('Select ETF Ticker', etf_tickers)
 start_date = st.sidebar.date_input('Start Date', pd.to_datetime("2022-01-01"))
 end_date = st.sidebar.date_input('End Date', pd.to_datetime("2025-01-01"))
 max_investment = st.sidebar.number_input('Max Investment (₹)', value=200000, step=1000)
@@ -160,3 +174,37 @@ if st.sidebar.button('Calculate Investment Strategies'):
     )
 
     st.plotly_chart(fig)
+
+# Add custom CSS for fixed footer
+st.markdown("""
+    <style>
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;  /* Use viewport width */
+            background-color: #333;
+            text-align: center;
+            padding: 10px 0;
+            color: white;
+            box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.0);
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+#            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Footer content with contact and social media links
+st.markdown("""
+    <div class="footer">
+        <p>Contact us: <a href="mailto:purohitvikram77@gmail.com">purohitvikram77@gmail.com</a> | 
+        <a href="https://github.com/7vikram" target="_blank">GitHub</a> | 
+        <a href="https://www.linkedin.com/in/7vikram" target="_blank">LinkedIn</a></p>
+    </div>
+""", unsafe_allow_html=True)
