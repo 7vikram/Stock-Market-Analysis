@@ -165,7 +165,7 @@ if st.sidebar.button('Calculate Investment Strategies'):
 
     # Update layout
     fig.update_layout(
-        title="Nifty 50 Price with SIP and Reactive Investment Markers",
+        title=f"{etf_ticker} Price with SIP and Reactive Investment Markers",
         xaxis_title="Date",
         yaxis_title="Price",
         xaxis_rangeslider_visible=False,
