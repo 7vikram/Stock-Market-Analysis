@@ -54,7 +54,7 @@ market_drop_threshold = st.sidebar.slider('Market Drop Threshold', min_value=1, 
 market_drop_threshold = -market_drop_threshold/100
 lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=60, step=1)
 
-# Calculate the number of months between start and end dates
+## Calculate the number of months between start and end dates
 num_months = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days // 30  # Approximate months
 sip_monthly_investment = max_investment / num_months  # Divide the total investment by the number of months
 
