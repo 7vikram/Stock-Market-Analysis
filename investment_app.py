@@ -173,8 +173,8 @@ with tabs[1]:
     # User inputs for tickers and date range
     ticker1 = st.selectbox("Select First Ticker", etf_tickers, index=0)
     ticker2 = st.selectbox("Select Second Ticker", etf_tickers, index=1)
-    chart_start_date = st.date_input("Chart Start Date", pd.to_datetime("2022-01-01"))
-    chart_end_date = st.date_input("Chart End Date", pd.to_datetime("2025-01-01"))
+    chart_start_date = st.date_input("Chart Start Date", pd.to_datetime("today"))
+    chart_end_date = st.date_input("Chart End Date", pd.to_datetime("today") - pd.DateOffset(years=1))
 
     if st.button("Plot Chart"):
         # Fetch data for both tickers
