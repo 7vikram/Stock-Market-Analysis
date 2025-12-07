@@ -53,8 +53,8 @@ with tabs[0]:
 
     # User Inputs
     etf_ticker = st.sidebar.selectbox('Select ETF Ticker', etf_tickers)
-    start_date = st.sidebar.date_input('Start Date', pd.to_datetime("2022-01-01"))
-    end_date = st.sidebar.date_input('End Date', pd.to_datetime("2025-01-01"))
+    start_date = st.sidebar.date_input('Start Date', pd.to_datetime("today"))
+    end_date = st.sidebar.date_input('End Date', pd.to_datetime("today") - pd.DateOffset(years=1))
     max_investment = st.sidebar.number_input('Max Investment (₹)', value=200000, step=1000)
     monthly_investment = st.sidebar.number_input('Monthly Investment (₹)', value=20000, step=1000)
     market_drop_threshold = st.sidebar.slider('Market Drop Threshold', min_value=1, max_value=20, value=3, step=1)
