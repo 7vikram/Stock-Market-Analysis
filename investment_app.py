@@ -56,10 +56,10 @@ with tabs[0]:
     start_date = st.sidebar.date_input('Start Date', pd.to_datetime("today") - pd.DateOffset(years=1))
     end_date = st.sidebar.date_input('End Date', pd.to_datetime("today"))
     max_investment = st.sidebar.number_input('Max Investment (₹)', value=200000, step=1000)
-    #monthly_investment = st.sidebar.number_input('Monthly Investment (₹)', value=20000, step=1000)
+    monthly_investment = st.sidebar.number_input('Increase Monthly Investment (Reactive) (₹)', value=0, step=1000)
     market_drop_threshold = st.sidebar.slider('Market Drop Threshold', min_value=1, max_value=20, value=3, step=1)
     market_drop_threshold = -market_drop_threshold / 100
-    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=30, step=1)
+    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=60, step=1)
 
     # Calculate the number of months between start and end dates
     num_months = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days // 30  # Approximate months
@@ -68,7 +68,6 @@ with tabs[0]:
     # When the user clicks the button, calculate and display the results
     if st.sidebar.button('Calculate Investment Strategies'):
         # Fetch ETF Data
-        st.write(start_date,end_date)
         etf_data = yf.download(etf_ticker, start=start_date, end=end_date)
         if 'Adj Close' not in etf_data.columns:
             etf_data['Adj Close'] = etf_data['Close']
@@ -77,16 +76,15 @@ with tabs[0]:
         etf_data['Max Drop'] = etf_data['Adj Close'].rolling(lookback_period_days).apply(
             lambda x: (x.iloc[-1] / x.max()) - 1
         )
-        etf_data = etf_data[['Adj Close', 'Returns', 'Max Drop']].dropna()
+        
 
         # Monthly SIP Strategy
-        sip_dates = pd.date_range(start=start_date.replace(day=1), end=end_date, freq=BMonthBegin())
+        sip_dates = pd.date_range(start=start_date, end=end_date, freq='MS') + BMonthBegin(-1)
         sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)]
-        st.write("sip----",sip_dates)
+        
         # Adjust SIP dates if they are not in the available ETF data
         available_dates = etf_data.index
-        adjusted_sip_dates = [find_nearest_date(available_dates, sip_date) for sip_date in sip_dates]
-        st.write("adj----",sip_dates,available_dates,adjusted_sip_dates)
+        adjusted_sip_dates = [find_nearest_date(available_dates, sip_date) for sip_date in sip_dates][1:]
         sip_cash_flows = [-sip_monthly_investment] * len(adjusted_sip_dates)
 
         # SIP Cash Flow Calculation
@@ -101,17 +99,18 @@ with tabs[0]:
         reactive_cash_flows = []
         cumulative_reactive_investment = 0
         last_investment_date = None
+        
 
         for date, row in etf_data.iterrows():
             max_drop = row['Max Drop'] if isinstance(row['Max Drop'], (float, int)) else row['Max Drop'].iloc[0]
-
+            react_sip = sip_monthly_investment + monthly_investment
             if max_drop <= market_drop_threshold:
                 if last_investment_date is None or (date - last_investment_date).days > lookback_period_days:
-                    if cumulative_reactive_investment + sip_monthly_investment:
-                        reactive_dates.append(date)
-                        reactive_cash_flows.append(-sip_monthly_investment)
-                        cumulative_reactive_investment += sip_monthly_investment
-                        last_investment_date = date
+                    #if cumulative_reactive_investment + sip_monthly_investment <= max_investment:
+                    reactive_dates.append(date)
+                    reactive_cash_flows.append(-react_sip)
+                    cumulative_reactive_investment += react_sip
+                    last_investment_date = date
 
         # Reactive Portfolio Calculation
         price_on_reactive_dates = etf_data.loc[reactive_dates, 'Adj Close']
@@ -138,8 +137,8 @@ with tabs[0]:
 
         st.subheader('Reactive Strategy:')
         st.write(f"Final Portfolio Value: ₹{reactive_final_value:,.2f}")
-        st.write(f"Monthly SIP Value: ₹{sip_monthly_investment:,.2f}")
-        st.write(f"No of times invested: {-sum(reactive_cash_flows)/sip_monthly_investment:,.0f}")
+        st.write(f"Monthly SIP Value: ₹{react_sip:,.2f}")
+        st.write(f"No of times invested: {-sum(reactive_cash_flows)/react_sip:,.0f}")
         st.write(f"CAGR: {reactive_cagr:.2%}")
         st.write(f"XIRR: {reactive_xirr:.2%}")
         st.write(f"Total Investment: ₹{-sum(reactive_cash_flows):,.2f}")
