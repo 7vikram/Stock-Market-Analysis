@@ -59,7 +59,7 @@ with tabs[0]:
     monthly_investment = st.sidebar.number_input('Increase Monthly Investment (Reactive) (₹)', value=0, step=1000)
     market_drop_threshold = st.sidebar.slider('Market Drop Threshold', min_value=1, max_value=20, value=3, step=1)
     market_drop_threshold = -market_drop_threshold / 100
-    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=60, step=1)
+    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=30, step=1)
 
     # Calculate the number of months between start and end dates
     num_months = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days // 30  # Approximate months
