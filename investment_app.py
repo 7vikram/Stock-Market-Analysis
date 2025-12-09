@@ -80,7 +80,7 @@ with tabs[0]:
 
         # Monthly SIP Strategy
         sip_dates = pd.date_range(start=start_date, end=end_date, freq='MS')
-        sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)].iloc[1:]
+        sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)][1:]
         st.write("sip----",sip_dates)
         # Adjust SIP dates if they are not in the available ETF data
         available_dates = etf_data.index
