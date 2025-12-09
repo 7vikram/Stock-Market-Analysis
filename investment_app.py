@@ -56,10 +56,10 @@ with tabs[0]:
     start_date = st.sidebar.date_input('Start Date', pd.to_datetime("today") - pd.DateOffset(years=1))
     end_date = st.sidebar.date_input('End Date', pd.to_datetime("today"))
     max_investment = st.sidebar.number_input('Max Investment (₹)', value=200000, step=1000)
-    monthly_investment = st.sidebar.number_input('Monthly Investment (₹)', value=20000, step=1000)
+    #monthly_investment = st.sidebar.number_input('Monthly Investment (₹)', value=20000, step=1000)
     market_drop_threshold = st.sidebar.slider('Market Drop Threshold', min_value=1, max_value=20, value=3, step=1)
     market_drop_threshold = -market_drop_threshold / 100
-    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=60, step=1)
+    lookback_period_days = st.sidebar.number_input('Lookback Period (days)', value=30, step=1)
 
     # Calculate the number of months between start and end dates
     num_months = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days // 30  # Approximate months
@@ -81,11 +81,11 @@ with tabs[0]:
         # Monthly SIP Strategy
         sip_dates = pd.date_range(start=start_date, end=end_date, freq='MS') + BMonthBegin(5)
         sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)]
-        
+        st.write("sip----",adjusted_sip_dates)
         # Adjust SIP dates if they are not in the available ETF data
         available_dates = etf_data.index
         adjusted_sip_dates = [find_nearest_date(available_dates, sip_date) for sip_date in sip_dates]
-        st.write("sdsdsd----",adjusted_sip_dates)
+        st.write("adj----",adjusted_sip_dates)
         sip_cash_flows = [-sip_monthly_investment] * len(adjusted_sip_dates)
 
         # SIP Cash Flow Calculation
