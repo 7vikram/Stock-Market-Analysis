@@ -106,10 +106,10 @@ with tabs[0]:
 
             if max_drop <= market_drop_threshold:
                 if last_investment_date is None or (date - last_investment_date).days > lookback_period_days:
-                    if cumulative_reactive_investment + monthly_investment:
+                    if cumulative_reactive_investment + sip_monthly_investment:
                         reactive_dates.append(date)
-                        reactive_cash_flows.append(-monthly_investment)
-                        cumulative_reactive_investment += monthly_investment
+                        reactive_cash_flows.append(-sip_monthly_investment)
+                        cumulative_reactive_investment += sip_monthly_investment
                         last_investment_date = date
 
         # Reactive Portfolio Calculation
