@@ -142,7 +142,7 @@ with tabs[0]:
         st.write(f"CAGR: {reactive_cagr:.2%}")
         st.write(f"XIRR: {reactive_xirr:.2%}")
         st.write(f"Total Investment: ₹{-sum(reactive_cash_flows):,.2f}")
-        st.dataframe(reactive_final_value)
+
 
         # Create Plotly Interactive Plot
         fig = go.Figure()
