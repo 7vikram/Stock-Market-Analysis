@@ -79,7 +79,7 @@ with tabs[0]:
         etf_data = etf_data[['Adj Close', 'Returns', 'Max Drop']].dropna()
 
         # Monthly SIP Strategy
-        sip_dates = pd.date_range(start=start_date, end=end_date, freq='MS')
+        sip_dates = pd.date_range(start=start_date+BMonthBegin(1), end=end_date, freq='MS')
         sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)]
         st.write("sip----",sip_dates)
         # Adjust SIP dates if they are not in the available ETF data
