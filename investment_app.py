@@ -81,7 +81,7 @@ with tabs[0]:
         # Monthly SIP Strategy
         sip_dates = pd.date_range(start=start_date, end=end_date, freq='MS') + BMonthBegin(5)
         sip_dates = sip_dates[sip_dates <= pd.to_datetime(end_date)]
-        st.write("sip----",adjusted_sip_dates)
+        st.write("sip----",sip_dates)
         # Adjust SIP dates if they are not in the available ETF data
         available_dates = etf_data.index
         adjusted_sip_dates = [find_nearest_date(available_dates, sip_date) for sip_date in sip_dates]
