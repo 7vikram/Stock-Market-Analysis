@@ -128,12 +128,17 @@ with tabs[0]:
         # Display Results
         st.subheader('SIP Strategy:')
         st.write(f"Final Portfolio Value: ₹{sip_final_value:,.2f}")
+        st.write(f"Monthly SIP Value: ₹{sip_monthly_investment:,.2f}")
+        
+        st.write(f"No of times invested(Months): {num_months}")
         st.write(f"CAGR: {sip_cagr:.2%}")
         st.write(f"XIRR: {sip_xirr:.2%}")
         st.write(f"Total Investment: ₹{-sum(sip_cash_flows):,.2f}")
 
         st.subheader('Reactive Strategy:')
         st.write(f"Final Portfolio Value: ₹{reactive_final_value:,.2f}")
+        st.write(f"Monthly SIP Value: ₹{sip_monthly_investment:,.2f}")
+        st.write(f"No of times invested: {reactive_final_value/sip_monthly_investment}")
         st.write(f"CAGR: {reactive_cagr:.2%}")
         st.write(f"XIRR: {reactive_xirr:.2%}")
         st.write(f"Total Investment: ₹{-sum(reactive_cash_flows):,.2f}")
