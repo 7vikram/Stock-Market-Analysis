@@ -68,6 +68,7 @@ with tabs[0]:
     # When the user clicks the button, calculate and display the results
     if st.sidebar.button('Calculate Investment Strategies'):
         # Fetch ETF Data
+        st.write(start_date,end_date)
         etf_data = yf.download(etf_ticker, start=start_date, end=end_date)
         if 'Adj Close' not in etf_data.columns:
             etf_data['Adj Close'] = etf_data['Close']
