@@ -85,7 +85,7 @@ with tabs[0]:
         # Adjust SIP dates if they are not in the available ETF data
         available_dates = etf_data.index
         adjusted_sip_dates = [find_nearest_date(available_dates, sip_date) for sip_date in sip_dates]
-        st.write("adj----",adjusted_sip_dates)
+        st.write("adj----",sip_dates,available_dates,adjusted_sip_dates)
         sip_cash_flows = [-sip_monthly_investment] * len(adjusted_sip_dates)
 
         # SIP Cash Flow Calculation
